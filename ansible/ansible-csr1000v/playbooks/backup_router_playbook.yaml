@@ -1,0 +1,27 @@
+---
+- name: AUTOMATIC BACKUP OF RUNNING-CONFIG
+  hosts: CSR1kv
+  gather_facts: false
+  connection: local
+
+  vars:
+    cli:
+      host: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+
+  tasks:
+    - name: GET DATETIME
+      import_tasks: get_date_time_task.yaml
+
+    - name: DISPLAYING THE RUNNING-CONFIG
+      ios_command:
+        provider: "{{ cli }}"
+        commands:
+          - show running-config
+      register: config
+
+    - name: SAVE OUTPUT TO ./backups/
+      copy:
+        content: "{{ config.stdout[0] }}"
+        dest: "../backups/runnig_config{{ inventory_hostname }}_{{ date_time }}.txt"

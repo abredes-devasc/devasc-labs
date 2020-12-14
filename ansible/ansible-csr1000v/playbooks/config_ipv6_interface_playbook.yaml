@@ -1,0 +1,36 @@
+---
+- name: CONFIGURE IPv6 ADDRESSING
+  hosts: CSR1kv
+  gather_facts: false
+  connection: local
+
+  vars:
+    cli:
+      host: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+
+  tasks:
+    - name: GET DATETIME date_time variable
+      import_tasks: get_date_time_task.yaml
+
+    - name: SET IPv6 ADDRESS
+      ios_config:
+        timeout: 30
+        provider: "{{ cli }}"
+        parents: "interface Loopback1"
+        lines:
+          - description IPv6 ADDRESS
+          - ipv6 address 2001:db8:acad:1::1/64
+          - ipv6 address fe80::1:1 link-local
+
+    - name: SHOW IPv6 INTERFACE BRIEF
+      ios_command:
+        commands:
+          - show ipv6 interface brief
+      register: output
+
+    - name: SAVE OUTPUT
+      copy:
+        content: "{{ output.stdout[0] }}"
+        dest: "../configurations/IPv6_output_{{ inventory_hostname }}_{{ date_time }}.txt"
