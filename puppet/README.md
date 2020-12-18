@@ -37,12 +37,12 @@ To simplify to installation process 3 Vagrant Boxes will be used, as defined in 
 
 2. Clone the git repo
 ```
-git clone https://github.com/devopshouse/puppet-in-vagrant-examples.git
+git clone https://github.com/abredes-devasc/devasc-labs.git
 ```
 
 3.  Enter repo dir
 ```
-cd puppet-in-vagrant-examples/provision
+cd devasc-labs/puppet/provision
 ```
 
 4. Provision the required infrastructure with Vagrant
